@@ -45,10 +45,7 @@ namespace
     {
         if (a_msg->type == SKSE::MessagingInterface::kDataLoaded) {
             SteamPlayerService::Get().SetCallback(OnFetch);
-
-            if (Config::Get().GetAutoDisplay()) {
-                SteamPlayerService::Get().Start();
-            }
+            SteamPlayerService::Get().Start();
 
             RE::BSInputDeviceManager::GetSingleton()->AddEventSink(InputSink::Get());
         }

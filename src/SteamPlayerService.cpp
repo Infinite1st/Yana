@@ -20,10 +20,15 @@ void SteamPlayerService::Stop()
 
 void SteamPlayerService::Loop()
 {
-    while (m_running.load()) {
-        Fetch(false);  // автоматический вызов
+    int minutes = Config::Get().GetIntervalMinutes();
+    if (minutes == 0) {
+        m_running.store(false);
+        return;
+    }
 
-        int minutes = Config::Get().GetIntervalMinutes();
+    while (m_running.load()) {
+        Fetch(false);
+
         std::unique_lock lk(m_wakeMx);
         m_cv.wait_for(lk, std::chrono::minutes(minutes),
                       [this] { return !m_running.load(); });
@@ -57,5 +62,5 @@ void SteamPlayerService::Fetch(bool manual)
 
 void SteamPlayerService::FetchNow()
 {
-    Fetch(true);  // ручной вызов
+    Fetch(true);
 }

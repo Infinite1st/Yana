@@ -15,13 +15,11 @@ public:
 
     int  GetIntervalMinutes() const noexcept { return m_interval.load(); }
     int  GetHotkeyCode()      const noexcept { return m_hotkey.load(); }
-    bool GetAutoDisplay()     const noexcept { return m_autoDisplay.load(); }
     bool GetDebug()           const noexcept { return m_debug.load(); }
 
 private:
     Config() = default;
-    std::atomic<int>  m_interval{    5 };
-    std::atomic<int>  m_hotkey{     49 };  // 49 = N
-    std::atomic<bool> m_autoDisplay{ true };
-    std::atomic<bool> m_debug{       false };
+    std::atomic<int>  m_interval{ 5 };
+    std::atomic<int>  m_hotkey{  49 };  // 49 = N
+    std::atomic<bool> m_debug{   false };
 };
