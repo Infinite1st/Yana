@@ -4,9 +4,13 @@
 
 namespace
 {
-    void OnFetch(int count, bool connected)
+    void OnFetch(int count, bool connected, bool manual)
     {
-        std::string msg = connected
+        std::string msg;
+        if (Config::Get().GetDebug()) {
+            msg = (manual ? "[Manual] " : "[Auto] ");
+        }
+        msg += connected
             ? "Players in-game: " + std::to_string(count)
             : "Players in-game: N/A";
 

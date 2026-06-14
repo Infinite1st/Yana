@@ -20,17 +20,22 @@ void SteamPlayerService::Stop()
 
 void SteamPlayerService::Loop()
 {
-    while (m_running.load()) {
-        Fetch();
+    int minutes = Config::Get().GetIntervalMinutes();
+    if (minutes == 0) {
+        m_running.store(false);
+        return;
+    }
 
-        int minutes = Config::Get().GetIntervalMinutes();
+    while (m_running.load()) {
+        Fetch(false);
+
         std::unique_lock lk(m_wakeMx);
         m_cv.wait_for(lk, std::chrono::minutes(minutes),
                       [this] { return !m_running.load(); });
     }
 }
 
-void SteamPlayerService::Fetch()
+void SteamPlayerService::Fetch(bool manual)
 {
     HttpClient client;
     auto res = client.Get(kUrl, 10);
@@ -38,7 +43,7 @@ void SteamPlayerService::Fetch()
     if (!res.ok) {
         Callback cb;
         { std::lock_guard l(m_cbMx); cb = m_cb; }
-        if (cb) cb(-1, false);
+        if (cb) cb(-1, false, manual);
         return;
     }
 
@@ -47,15 +52,15 @@ void SteamPlayerService::Fetch()
         int  count = j.at("response").at("player_count").get<int>();
         Callback cb;
         { std::lock_guard l(m_cbMx); cb = m_cb; }
-        if (cb) cb(count, true);
-    } catch (const std::exception& ex) {
+        if (cb) cb(count, true, manual);
+    } catch (const std::exception&) {
         Callback cb;
         { std::lock_guard l(m_cbMx); cb = m_cb; }
-        if (cb) cb(-1, false);
+        if (cb) cb(-1, false, manual);
     }
 }
 
 void SteamPlayerService::FetchNow()
 {
-    Fetch();
+    Fetch(true);
 }

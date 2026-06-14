@@ -13,14 +13,13 @@ public:
 
     void Load();
 
-    // Интервал между уведомлениями в минутах (1–60)
-    int GetIntervalMinutes() const noexcept { return m_interval.load(); }
-
-    // Scancode кнопки для ручного запроса
-    int GetHotkeyCode() const noexcept { return m_hotkey.load(); }
+    int  GetIntervalMinutes() const noexcept { return m_interval.load(); }
+    int  GetHotkeyCode()      const noexcept { return m_hotkey.load(); }
+    bool GetDebug()           const noexcept { return m_debug.load(); }
 
 private:
     Config() = default;
-    std::atomic<int> m_interval{ 5 };
-    std::atomic<int> m_hotkey{ 49 };  // 49 = N
+    std::atomic<int>  m_interval{ 5 };
+    std::atomic<int>  m_hotkey{  49 };  // 49 = N
+    std::atomic<bool> m_debug{   false };
 };

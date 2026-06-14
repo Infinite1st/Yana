@@ -14,15 +14,15 @@ public:
 
     void Start();
     void Stop();
-    void FetchNow();
+    void FetchNow();  // ручной вызов (кнопка)
 
-    using Callback = std::function<void(int count, bool connected)>;
+    using Callback = std::function<void(int count, bool connected, bool manual)>;
     void SetCallback(Callback cb) { std::lock_guard l(m_cbMx); m_cb = std::move(cb); }
 
 private:
     SteamPlayerService() = default;
     void Loop();
-    void Fetch();
+    void Fetch(bool manual);
 
     static constexpr const char* kUrl =
         "https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=489830";
