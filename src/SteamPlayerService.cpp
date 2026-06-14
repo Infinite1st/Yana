@@ -21,7 +21,7 @@ void SteamPlayerService::Stop()
 void SteamPlayerService::Loop()
 {
     while (m_running.load()) {
-        Fetch();
+        Fetch(false);  // автоматический вызов
 
         int minutes = Config::Get().GetIntervalMinutes();
         std::unique_lock lk(m_wakeMx);
@@ -30,7 +30,7 @@ void SteamPlayerService::Loop()
     }
 }
 
-void SteamPlayerService::Fetch()
+void SteamPlayerService::Fetch(bool manual)
 {
     HttpClient client;
     auto res = client.Get(kUrl, 10);
@@ -38,7 +38,7 @@ void SteamPlayerService::Fetch()
     if (!res.ok) {
         Callback cb;
         { std::lock_guard l(m_cbMx); cb = m_cb; }
-        if (cb) cb(-1, false);
+        if (cb) cb(-1, false, manual);
         return;
     }
 
@@ -47,15 +47,15 @@ void SteamPlayerService::Fetch()
         int  count = j.at("response").at("player_count").get<int>();
         Callback cb;
         { std::lock_guard l(m_cbMx); cb = m_cb; }
-        if (cb) cb(count, true);
-    } catch (const std::exception& ex) {
+        if (cb) cb(count, true, manual);
+    } catch (const std::exception&) {
         Callback cb;
         { std::lock_guard l(m_cbMx); cb = m_cb; }
-        if (cb) cb(-1, false);
+        if (cb) cb(-1, false, manual);
     }
 }
 
 void SteamPlayerService::FetchNow()
 {
-    Fetch();
+    Fetch(true);  // ручной вызов
 }
