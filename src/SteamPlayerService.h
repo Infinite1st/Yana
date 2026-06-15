@@ -28,6 +28,7 @@ private:
         "https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=489830";
 
     std::thread             m_thread;
+    std::thread             m_manualThread;
     std::atomic<bool>       m_running{ false };
     std::mutex              m_wakeMx;
     std::condition_variable m_cv;
