@@ -16,6 +16,7 @@ void SteamPlayerService::Stop()
     if (!m_running.exchange(false)) return;
     m_cv.notify_all();
     if (m_thread.joinable()) m_thread.join();
+    if (m_manualThread.joinable()) m_manualThread.join();
 }
 
 void SteamPlayerService::Loop()
@@ -62,5 +63,6 @@ void SteamPlayerService::Fetch(bool manual)
 
 void SteamPlayerService::FetchNow()
 {
-    Fetch(true);
+    if (m_manualThread.joinable()) m_manualThread.join();
+    m_manualThread = std::thread(&SteamPlayerService::Fetch, this, true);
 }

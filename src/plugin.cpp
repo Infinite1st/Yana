@@ -29,11 +29,14 @@ namespace
         {
             if (!a_event) return RE::BSEventNotifyControl::kContinue;
 
+            int hotkey = Config::Get().GetHotkeyCode();
+            if (hotkey == 0) return RE::BSEventNotifyControl::kContinue;
+
             for (auto* ev = *a_event; ev; ev = ev->next) {
                 auto* btn = ev->AsButtonEvent();
                 if (!btn || !btn->IsDown()) continue;
 
-                if (btn->GetIDCode() == static_cast<uint32_t>(Config::Get().GetHotkeyCode())) {
+                if (btn->GetIDCode() == static_cast<uint32_t>(hotkey)) {
                     SteamPlayerService::Get().FetchNow();
                 }
             }
