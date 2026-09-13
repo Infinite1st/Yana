@@ -4,6 +4,7 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(extern/CommonLibSSE-NG)
+include(extern/CommonLibSSE-NG/cmake/CommonLibSSE.cmake)
 
 find_package(CURL REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
