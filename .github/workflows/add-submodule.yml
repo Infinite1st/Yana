@@ -31,6 +31,6 @@ jobs:
 
       - name: Commit and push
         run: |
-          git add .gitmodules extern vcpkg-configuration.json
+          git add .gitmodules extern
           git commit -m "Add CommonLibSSE-NG as submodule, drop stale vcpkg registry" || echo "Nothing to commit"
           git push
