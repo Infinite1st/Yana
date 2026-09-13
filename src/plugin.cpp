@@ -4,6 +4,15 @@
 
 namespace
 {
+    // RE::DebugNotification was removed from CommonLibSSE-NG; restored locally
+    // using the same relocation IDs the library used to expose it with.
+    void DebugNotification(const char* a_notification, const char* a_soundToPlay = nullptr, bool a_cancelIfAlreadyQueued = false)
+    {
+        using func_t = decltype(&DebugNotification);
+        static REL::Relocation<func_t> func{ RELOCATION_ID(52050, 52933) };
+        return func(a_notification, a_soundToPlay, a_cancelIfAlreadyQueued);
+    }
+
     void OnFetch(int count, bool connected, bool manual)
     {
         std::string msg;
@@ -15,7 +24,7 @@ namespace
             : "Players in-game: N/A";
 
         if (auto* task = SKSE::GetTaskInterface()) {
-            task->AddTask([msg]() { RE::DebugNotification(msg.c_str()); });
+            task->AddTask([msg]() { DebugNotification(msg.c_str()); });
         }
     }
 
