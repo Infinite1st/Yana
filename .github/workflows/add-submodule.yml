@@ -1,0 +1,36 @@
+name: Add CommonLibSSE-NG submodule (one-time)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  add-submodule:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Remove old vcpkg-configuration.json if present
+        run: |
+          git rm -f vcpkg-configuration.json || true
+
+      - name: Add submodule
+        run: |
+          git submodule add -b ng https://github.com/alandtse/CommonLibSSE-NG.git extern/CommonLibSSE-NG
+          git submodule update --init --recursive
+
+      - name: Commit and push
+        run: |
+          git add .gitmodules extern vcpkg-configuration.json
+          git commit -m "Add CommonLibSSE-NG as submodule, drop stale vcpkg registry" || echo "Nothing to commit"
+          git push
