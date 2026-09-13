@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.21)
 project(PlayerCount VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
-find_package(CommonLibSSE CONFIG REQUIRED)
+add_subdirectory(extern/CommonLibSSE-NG)
+
 find_package(CURL REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(directxtk CONFIG REQUIRED)

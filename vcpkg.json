@@ -3,7 +3,6 @@
     "name": "playercount",
     "version-string": "1.0.0",
     "dependencies": [
-        "commonlibsse-ng-fork",
         "simpleini",
         "nlohmann-json",
         { "name": "curl", "features": ["ssl"] },
