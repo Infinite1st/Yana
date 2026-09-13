@@ -6,6 +6,12 @@
         "simpleini",
         "nlohmann-json",
         { "name": "curl", "features": ["ssl"] },
-        "directxtk"
+        "directxtk",
+        "directxmath",
+        "fmt",
+        "rapidcsv",
+        "spdlog",
+        "toml11",
+        "xbyak"
     ]
 }
